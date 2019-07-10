@@ -32,6 +32,14 @@ from airflow.utils.log.logging_mixin import LoggingMixin
 
 log = LoggingMixin().log
 utc = pendulum.timezone('UTC')
+try:
+    tz = conf.get("core", "default_timezone")
+    if tz == "system":
+        utc = pendulum.local_timezone()
+    else:
+        utc = pendulum.timezone(tz)
+except Exception:
+    pass
 
 
 def setup_event_handlers(engine,
